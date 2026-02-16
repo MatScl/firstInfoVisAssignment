@@ -7,7 +7,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f9fafb;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -22,10 +22,10 @@ body {
 
 .card {
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    padding: 24px;
-    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    padding: 30px;
+    margin-bottom: 25px;
 }
 
 #visualization {
@@ -34,18 +34,19 @@ body {
 
 /* box con la legenda */
 .legend-box {
-    margin-top: 16px;
-    padding: 16px;
-    background-color: #eff6ff;
-    border: 1px solid #bfdbfe;
-    border-radius: 6px;
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .legend-box h3 {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: bold;
-    margin-bottom: 8px;
-    color: #1e40af;
+    margin-bottom: 12px;
+    color: white;
 }
 
 .legend-items {
@@ -57,52 +58,63 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 12px;
+    font-size: 13px;
+    color: white;
+    font-weight: 500;
 }
 
 /* pallini colorati nella legenda */
 .color-box {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    border: 2px solid #2E5C8A;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .color-state-1{
-    background-color: #4A90E2;
+    background-color: #9b59b6;
 }
 
 .color-state-2 {
-    background-color: #E27D4A;
+    background-color: #e74c3c;
 }
 
 .color-state-3 {
-    background-color: #4AE27D;
+    background-color: #16a085;
 }
 
 .instructions {
     text-align: center;
     font-size: 14px;
-    color: #666;
-    line-height: 1.5;
+    color: white;
+    line-height: 1.6;
+    background: rgba(255,255,255,0.15);
+    padding: 15px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
 }
 
 .instructions p {
     margin-bottom: 8px;
 }
 
+.instructions strong {
+    color: #fff;
+}
+
 /* stili degli omini */
 .stickman-head {
-    fill: #4A90E2;
-    stroke: #2E5C8A;
-    stroke-width: 1.5;
+    fill: #9b59b6;
+    stroke: #6c3483;
+    stroke-width: 2;
 }
 
 .stickman-body,
 .stickman-arms,
 .stickman-leg {
-    stroke: #2E5C8A;
-    stroke-width: 2.5;
+    stroke: #6c3483;
+    stroke-width: 3;
     stroke-linecap: round;
 }
 

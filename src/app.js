@@ -1,10 +1,10 @@
-// genero i dati random per i 10 omini
+// genero i dati random per i 12 omini
 function generateData() {
   var dataset = [];
-  for (var i = 0; i < 10; i++) {
+  for (var i = 0; i < 12; i++) {
     dataset.push({
       id: i,
-      name: `Case_${i + 1}`,
+      name: `Dato_${i + 1}`,
       var1: Math.random() * 80 + 10,  // valori tra 10 e 90
       var2: Math.random() * 80 + 10,
       var3: Math.random() * 80 + 10,
@@ -20,14 +20,27 @@ function generateData() {
 // funzione per disegnare un omino
 function createStickman(g, scale) {
   if(!scale) scale = 1;
-  var size = 20 * scale;
+  var size = 25 * scale;
   
   // testa (un cerchio)
   g.append("circle")
     .attr("cx", 0)
-    .attr("cy", -size * 1.2)
-    .attr("r", size * 0.3)
+    .attr("cy", -size * 1.1)
+    .attr("r", size * 0.35)
     .attr("class", "stickman-head");
+  
+  // occhi
+  g.append("circle")
+    .attr("cx", -size * 0.1)
+    .attr("cy", -size * 1.15)
+    .attr("r", size * 0.05)
+    .attr("fill", "#fff");
+  
+  g.append("circle")
+    .attr("cx", size * 0.1)
+    .attr("cy", -size * 1.15)
+    .attr("r", size * 0.05)
+    .attr("fill", "#fff");
 
   // corpo (linea verticale)
   g.append("line")
@@ -67,9 +80,9 @@ function createVisualization() {
   var data = generateData();
   
   // dimensioni svg
-  var w = 800;
-  var h = 600;
-  var margin = { top: 40, right: 40, bottom: 40, left: 40 };
+  var w = 900;
+  var h = 650;
+  var margin = { top: 50, right: 50, bottom: 50, left: 50 };
   var innerWidth = w - margin.left - margin.right;
   var innerHeight = h - margin.top - margin.bottom;
 
@@ -109,11 +122,12 @@ function createVisualization() {
   // titolo
   svg.append("text")
     .attr("x", w / 2)
-    .attr("y", 25)
+    .attr("y", 30)
     .attr("text-anchor", "middle")
-    .style("font-size", "18px")
+    .style("font-size", "22px")
     .style("font-weight", "bold")
-    .text("Visualizzazione Multivariata Interattiva");
+    .style("fill", "#2c3e50")
+    .text("Dataset Multivariato - Visualizzazione Interattiva");
 
   // istruzioni in basso
   svg.append("text")
@@ -151,13 +165,13 @@ function createVisualization() {
 
   // stili per gli omini
   svg.selectAll(".stickman-head")
-    .attr("fill", "#4A90E2")
-    .attr("stroke", "#2E5C8A")
-    .attr("stroke-width", 1.5);
+    .attr("fill", "#9b59b6")
+    .attr("stroke", "#6c3483")
+    .attr("stroke-width", 2);
 
   svg.selectAll(".stickman-body, .stickman-arms, .stickman-leg")
-    .attr("stroke", "#2E5C8A")
-    .attr("stroke-width", 2.5)
+    .attr("stroke", "#6c3483")
+    .attr("stroke-width", 3)
     .attr("stroke-linecap", "round");
 
   // gestione del click
@@ -175,17 +189,17 @@ function createVisualization() {
       // stato 0: uso var1 e var2
       newX = xScale(d.var1);
       newY = yScale(d.var2);
-      color = "#4A90E2";
+      color = "#9b59b6";  // viola
     } else if (d.clickState === 1) {
       // stato 1: uso var3 e var4
       newX = xScale(d.var3);
       newY = yScale(d.var4);
-      color = "#E27D4A";
+      color = "#e74c3c";  // rosso
     } else {
       // stato 2: uso var5 e var6
       newX = xScale(d.var5);
       newY = yScale(d.var6);
-      color = "#4AE27D";
+      color = "#16a085";  // verde acqua
     }
     
     // faccio l'animazione per spostare l'omino
@@ -221,7 +235,7 @@ function createVisualization() {
       d3.select(this).select(".stickman-head")
         .transition()
         .duration(200)
-        .attr("r", 7.2);
+        .attr("r", 9.5);
     })
     .on("mouseleave", function() {
       // quando tolgo il mouse torno normale
@@ -240,7 +254,7 @@ function createVisualization() {
       d3.select(this).select(".stickman-head")
         .transition()
         .duration(200)
-        .attr("r", 6);
+        .attr("r", 8.75);
     });
 
   // metto anche gli assi per riferimento
