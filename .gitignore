@@ -1,0 +1,40 @@
+# ============================================
+# .gitignore - Progetto Visualizzazione Multivariata
+# ============================================
+# Mantiene solo il codice sorgente e documentazione tecnica
+# Ignora note personali, file temporanei e documenti di lavoro
+
+# Note personali e bozze
+notes/
+
+# File temporanei LibreOffice/OpenOffice
+*.odt
+*.ods
+*.odp
+.~lock.*
+
+# File temporanei sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Build artifacts (se in futuro si aggiunge build)
+dist/
+build/
+*.min.js
+*.min.css
+
+# Dipendenze (se in futuro si usa npm)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Log e debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizzazione Multivariata</title>
+    <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <svg id="visualization"></svg>
+            
+            <div class="legend-box">
+                <h3>Legenda Stati:</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="color-box color-state-1"></div>
+                        <span>Stato 1: Variabili 1-2</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box color-state-2"></div>
+                        <span>Stato 2: Variabili 3-4</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box color-state-3"></div>
+                        <span>Stato 3: Variabili 5-6</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <p><strong>Istruzioni:</strong> Clicca su un omino per farlo muovere tra le diverse coppie di variabili.</p>
+            <p>Ogni omino può essere cliccato indipendentemente. Le transizioni sono animate e il colore della testa indica lo stato corrente.</p>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="src/app.js"></script>
+</body>
+</html>

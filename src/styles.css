@@ -1,0 +1,111 @@
+/* reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9fafb;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+#visualization {
+    display: block;
+}
+
+/* box con la legenda */
+.legend-box {
+    margin-top: 16px;
+    padding: 16px;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+}
+
+.legend-box h3 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #1e40af;
+}
+
+.legend-items {
+    display: flex;
+    gap: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+
+/* pallini colorati nella legenda */
+.color-box {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #2E5C8A;
+}
+
+.color-state-1{
+    background-color: #4A90E2;
+}
+
+.color-state-2 {
+    background-color: #E27D4A;
+}
+
+.color-state-3 {
+    background-color: #4AE27D;
+}
+
+.instructions {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.instructions p {
+    margin-bottom: 8px;
+}
+
+/* stili degli omini */
+.stickman-head {
+    fill: #4A90E2;
+    stroke: #2E5C8A;
+    stroke-width: 1.5;
+}
+
+.stickman-body,
+.stickman-arms,
+.stickman-leg {
+    stroke: #2E5C8A;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+}
+
+.stickman-group {
+    cursor: pointer;
+}
