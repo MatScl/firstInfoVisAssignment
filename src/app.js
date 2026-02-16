@@ -4,16 +4,7 @@ function generateData() {
   for (var i = 0; i < 12; i++) {
     dataset.push({
       id: i,
-      name: `Da  // stili per gli omini
-  svg.selectAll(".stickman-head")
-    .attr("fill", "#2D6A4F")
-    .attr("stroke", "#1B4332")
-    .attr("stroke-width", 2);
-
-  svg.selectAll(".stickman-body, .stickman-arms, .stickman-leg")
-    .attr("stroke", "#1B4332")
-    .attr("stroke-width", 2.5)
-    .attr("stroke-linecap", "round");}`,
+      name: `Dato_${i + 1}`,
       var1: Math.random() * 80 + 10,  // valori tra 10 e 90
       var2: Math.random() * 80 + 10,
       var3: Math.random() * 80 + 10,
