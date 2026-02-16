@@ -4,7 +4,16 @@ function generateData() {
   for (var i = 0; i < 12; i++) {
     dataset.push({
       id: i,
-      name: `Dato_${i + 1}`,
+      name: `Da  // stili per gli omini
+  svg.selectAll(".stickman-head")
+    .attr("fill", "#2D6A4F")
+    .attr("stroke", "#1B4332")
+    .attr("stroke-width", 2);
+
+  svg.selectAll(".stickman-body, .stickman-arms, .stickman-leg")
+    .attr("stroke", "#1B4332")
+    .attr("stroke-width", 2.5)
+    .attr("stroke-linecap", "round");}`,
       var1: Math.random() * 80 + 10,  // valori tra 10 e 90
       var2: Math.random() * 80 + 10,
       var3: Math.random() * 80 + 10,
@@ -189,17 +198,17 @@ function createVisualization() {
       // stato 0: uso var1 e var2
       newX = xScale(d.var1);
       newY = yScale(d.var2);
-      color = "#9b59b6";  // viola
+      color = "#2D6A4F";  // verde scuro
     } else if (d.clickState === 1) {
       // stato 1: uso var3 e var4
       newX = xScale(d.var3);
       newY = yScale(d.var4);
-      color = "#e74c3c";  // rosso
+      color = "#95D5B2";  // verde chiaro
     } else {
       // stato 2: uso var5 e var6
       newX = xScale(d.var5);
       newY = yScale(d.var6);
-      color = "#16a085";  // verde acqua
+      color = "#D4A574";  // terracotta
     }
     
     // faccio l'animazione per spostare l'omino

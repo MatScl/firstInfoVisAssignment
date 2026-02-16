@@ -7,7 +7,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #B7E4C7 0%, #52B788 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -36,7 +36,7 @@ body {
 .legend-box {
     margin-top: 20px;
     padding: 20px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #FAF3E0 0%, #E8D5B7 100%);
     border: none;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -46,7 +46,7 @@ body {
     font-size: 15px;
     font-weight: bold;
     margin-bottom: 12px;
-    color: white;
+    color: #1B4332;
 }
 
 .legend-items {
@@ -59,7 +59,7 @@ body {
     align-items: center;
     gap: 8px;
     font-size: 13px;
-    color: white;
+    color: #1B4332;
     font-weight: 500;
 }
 
@@ -68,20 +68,20 @@ body {
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    border: 2px solid white;
+    border: 2px solid #1B4332;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .color-state-1{
-    background-color: #9b59b6;
+    background-color: #2D6A4F;
 }
 
 .color-state-2 {
-    background-color: #e74c3c;
+    background-color: #95D5B2;
 }
 
 .color-state-3 {
-    background-color: #16a085;
+    background-color: #D4A574;
 }
 
 .instructions {
@@ -105,15 +105,15 @@ body {
 
 /* stili degli omini */
 .stickman-head {
-    fill: #9b59b6;
-    stroke: #6c3483;
+    fill: #2D6A4F;
+    stroke: #1B4332;
     stroke-width: 2;
 }
 
 .stickman-body,
 .stickman-arms,
 .stickman-leg {
-    stroke: #6c3483;
+    stroke: #1B4332;
     stroke-width: 3;
     stroke-linecap: round;
 }
