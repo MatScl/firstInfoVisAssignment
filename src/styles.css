@@ -1,10 +1,72 @@
-/* reset */
+/**
+ * ============================================
+ * RESET CSS E BOX-SIZING
+ * ============================================
+ * 
+ * SCOPO: Normalizzare il comportamento cross-browser
+ * 
+ * Selettore universale (*):
+ * - Applica regole a TUTTI gli elementi
+ * 
+ * margin: 0, padding: 0:
+ * - Rimuove spacing predefiniti dei browser
+ * - Body, h1, p, etc. hanno margini diversi per browser
+ * - Partire da zero garantisce controllo totale
+ * 
+ * box-sizing: border-box:
+ * - Cambia calcolo dimensioni elementi
+ * - SENZA: width = contenuto (padding/border si AGGIUNGONO)
+ * - CON: width = contenuto + padding + border (più intuitivo)
+ * - Esempio: div { width:100px; padding:10px; border:5px }
+ *   Content-box: larghezza totale = 100+20+10 = 130px ❌
+ *   Border-box: larghezza totale = 100px (contenuto si riduce) ✅
+ */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/**
+ * ============================================
+ * STILE BODY - LAYOUT E SFONDO
+ * ============================================
+ * 
+ * font-family: Arial, sans-serif:
+ * - Font primario: Arial (web-safe, su tutti i sistemi)
+ * - Fallback: sans-serif generico se Arial manca
+ * 
+ * background: linear-gradient(...):
+ * - Gradiente lineare da angolo 135° (diagonale SX-alto → DX-basso)
+ * - Colore inizio: #B7E4C7 (verde chiaro pastello)
+ * - Colore fine: #52B788 (verde medio bosco)
+ * - 0% e 100%: posizioni inizio/fine gradiente
+ * - EFFETTO: sfondo dinamico, non piatto
+ * 
+ * min-height: 100vh:
+ * - vh = viewport height (1vh = 1% altezza finestra)
+ * - 100vh = altezza completa viewport
+ * - min-height (non height): permette crescita se contenuto supera
+ * - BENEFICIO: gradiente copre sempre schermo intero
+ * 
+ * display: flex:
+ * - Abilita Flexbox layout su body
+ * - Figli (container) diventano flex items
+ * 
+ * align-items: center:
+ * - Centra verticalmente figli su cross-axis (asse Y in row layout)
+ * 
+ * justify-content: center:
+ * - Centra orizzontalmente figli su main-axis (asse X in row layout)
+ * 
+ * COMBINAZIONE flex + align + justify:
+ * - Centra perfettamente .container sia orizz. che vert.
+ * - Metodo moderno, sostituisce vecchi trucchi margin/position
+ * 
+ * padding: 20px:
+ * - Spazio interno su tutti i lati
+ * - Evita che contenuto tocchi bordi viewport su schermi piccoli
+ */
 body {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #B7E4C7 0%, #52B788 100%);
@@ -15,11 +77,52 @@ body {
     padding: 20px;
 }
 
+/**
+ * ============================================
+ * CONTAINER PRINCIPALE
+ * ============================================
+ * 
+ * width: 100%:
+ * - Container occupa tutta larghezza disponibile
+ * 
+ * max-width: 900px:
+ * - Limita larghezza massima a 900px
+ * - Su schermi >900px: container resta 900px (centrato da flex)
+ * - Su schermi <900px: container si riduce (width:100%)
+ * - SCOPO: leggibilità - linee troppo lunghe sono faticose da leggere
+ */
 .container {
     width: 100%;
     max-width: 900px;
 }
 
+/**
+ * ============================================
+ * CARD - CONTENITORE VISUALIZZAZIONE
+ * ============================================
+ * 
+ * background: white:
+ * - Sfondo bianco puro per massimo contrasto con SVG
+ * 
+ * border-radius: 15px:
+ * - Angoli arrotondati con raggio 15px
+ * - Design moderno, meno austero di angoli retti
+ * 
+ * box-shadow: 0 8px 32px rgba(0,0,0,0.2):
+ * - Ombra per effetto "carta sollevata"
+ * - Parametri: offset-x offset-y blur-radius color
+ *   * offset-x: 0 = ombra centrata orizzontalmente
+ *   * offset-y: 8px = ombra sotto la card (gravità)
+ *   * blur-radius: 32px = sfocatura morbida
+ *   * rgba(0,0,0,0.2) = nero con 20% opacità (ombra leggera)
+ * 
+ * padding: 30px:
+ * - Spazio interno tra bordo card e contenuto
+ * - SVG non tocca i bordi della card
+ * 
+ * margin-bottom: 25px:
+ * - Distanza tra card e elementi sotto (legend-box, instructions)
+ */
 .card {
     background: white;
     border-radius: 15px;
@@ -28,11 +131,48 @@ body {
     margin-bottom: 25px;
 }
 
+/**
+ * ============================================
+ * SVG VISUALIZATION
+ * ============================================
+ * 
+ * display: block:
+ * - SVG di default è inline (come <img>)
+ * - Inline causa piccolo spazio sotto (line-height)
+ * - block rimuove questo spazio indesiderato
+ */
 #visualization {
     display: block;
 }
 
-/* box con la legenda */
+/**
+ * ============================================
+ * LEGEND BOX - LEGENDA COLORI
+ * ============================================
+ * 
+ * margin-top: 20px:
+ * - Spazio sopra la legenda (separa da card sopra)
+ * 
+ * padding: 20px:
+ * - Spazio interno tra bordo e contenuto
+ * 
+ * background: linear-gradient(...):
+ * - Gradiente beige/crema complementare al verde body
+ * - 135deg: stessa angolazione del body per coerenza
+ * - #FAF3E0: beige chiarissimo
+ * - #E8D5B7: beige/sabbia più scuro
+ * 
+ * border: none:
+ * - Rimuove eventuale bordo default
+ * 
+ * border-radius: 10px:
+ * - Angoli arrotondati (meno della card per gerarchia visiva)
+ * 
+ * box-shadow: 0 4px 15px rgba(0,0,0,0.1):
+ * - Ombra più sottile della card (4px vs 8px offset)
+ * - 10% opacità vs 20% = più leggera
+ * - EFFETTO: legenda meno prominente di card principale
+ */
 .legend-box {
     margin-top: 20px;
     padding: 20px;
@@ -42,6 +182,25 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
+/**
+ * ============================================
+ * TITOLO LEGENDA
+ * ============================================
+ * 
+ * font-size: 15px:
+ * - Dimensione media, visibile ma non dominante
+ * 
+ * font-weight: bold:
+ * - Grassetto per enfasi (è un titolo)
+ * 
+ * margin-bottom: 12px:
+ * - Spazio tra titolo e items della legenda
+ * 
+ * color: #1B4332:
+ * - Verde molto scuro (quasi nero)
+ * - Contrasta bene con sfondo beige
+ * - Coerente con palette generale (verde-terracotta)
+ */
 .legend-box h3 {
     font-size: 15px;
     font-weight: bold;
@@ -49,11 +208,49 @@ body {
     color: #1B4332;
 }
 
+/**
+ * ============================================
+ * CONTENITORE ITEMS LEGENDA
+ * ============================================
+ * 
+ * display: flex:
+ * - Layout flessibile orizzontale
+ * 
+ * gap: 20px:
+ * - Spazio tra ogni .legend-item
+ * - Più pulito che margin-right su ogni item
+ * - Proprietà CSS moderna (supporto IE11-)
+ */
 .legend-items {
     display: flex;
     gap: 20px;
 }
 
+/**
+ * ============================================
+ * SINGOLO ITEM LEGENDA
+ * ============================================
+ * 
+ * display: flex:
+ * - Layout flex per allineare pallino + testo
+ * 
+ * align-items: center:
+ * - Allinea verticalmente pallino e testo
+ * - Senza questo, testo sarebbe baseline-aligned
+ * 
+ * gap: 8px:
+ * - Spazio tra pallino colorato e label testuale
+ * 
+ * font-size: 13px:
+ * - Leggermente più piccolo del titolo (15px)
+ * 
+ * color: #1B4332:
+ * - Stesso verde scuro del titolo per coerenza
+ * 
+ * font-weight: 500:
+ * - Semi-bold (tra normal=400 e bold=700)
+ * - Leggibile ma non troppo pesante
+ */
 .legend-item {
     display: flex;
     align-items: center;
@@ -63,7 +260,27 @@ body {
     font-weight: 500;
 }
 
-/* pallini colorati nella legenda */
+/**
+ * ============================================
+ * PALLINI COLORATI LEGENDA
+ * ============================================
+ * 
+ * width, height: 18px:
+ * - Cerchi perfetti (stessa larghezza/altezza)
+ * - Dimensione bilanciata: visibili ma non invadenti
+ * 
+ * border-radius: 50%:
+ * - 50% di larghezza/altezza = cerchio perfetto
+ * - Su quadrato, border-radius:50% crea cerchio
+ * 
+ * border: 2px solid #1B4332:
+ * - Bordo verde scuro attorno al pallino
+ * - SCOPO: definisce meglio il colore, soprattutto per tinte chiare
+ * 
+ * box-shadow: 0 2px 8px rgba(0,0,0,0.2):
+ * - Piccola ombra per effetto 3D
+ * - Pallini sembrano "sollevati" sopra la legenda
+ */
 .color-box {
     width: 18px;
     height: 18px;
@@ -72,18 +289,76 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
+/**
+ * ============================================
+ * STATI COLORE - MAPPING CON JAVASCRIPT
+ * ============================================
+ * 
+ * Queste classi definiscono i colori dei pallini nella legenda
+ * DEVONO corrispondere ai colori in app.js nel click handler!
+ * 
+ * .color-state-1: #2D6A4F (verde scuro bosco)
+ * - Stato 0 in JavaScript: clickState === 0
+ * - Variabili: var1 (X) e var2 (Y)
+ * 
+ * .color-state-2: #95D5B2 (verde chiaro menta)
+ * - Stato 1 in JavaScript: clickState === 1
+ * - Variabili: var3 (X) e var4 (Y)
+ * 
+ * .color-state-3: #D4A574 (terracotta/beige caldo)
+ * - Stato 2 in JavaScript: clickState === 2
+ * - Variabili: var5 (X) e var6 (Y)
+ * 
+ * ⚠️ IMPORTANTE: Mantenere sincronizzati CSS e JS!
+ * Se cambio colori qui, devo cambiarli anche in app.js
+ */
 .color-state-1{
-    background-color: #2D6A4F;
+    background-color: #2D6A4F; /* Verde scuro - Var 1-2 */
 }
 
 .color-state-2 {
-    background-color: #95D5B2;
+    background-color: #95D5B2; /* Verde chiaro - Var 3-4 */
 }
 
 .color-state-3 {
-    background-color: #D4A574;
+    background-color: #D4A574; /* Terracotta - Var 5-6 */
 }
 
+/**
+ * ============================================
+ * ISTRUZIONI UTENTE
+ * ============================================
+ * 
+ * text-align: center:
+ * - Centra il testo orizzontalmente
+ * 
+ * font-size: 14px:
+ * - Leggibile ma non troppo grande
+ * 
+ * color: white:
+ * - Testo bianco per contrasto con sfondo semi-trasparente
+ * 
+ * line-height: 1.6:
+ * - Spaziatura tra righe = 160% della font-size
+ * - Migliora leggibilità vs default (1.2 tipicamente)
+ * 
+ * background: rgba(255,255,255,0.15):
+ * - Bianco con 15% opacità = sfondo semi-trasparente
+ * - Lascia vedere gradiente verde sotto
+ * - EFFETTO: glassmorphism (vetro smerigliato)
+ * 
+ * padding: 15px:
+ * - Spazio interno per "respirare"
+ * 
+ * border-radius: 10px:
+ * - Angoli arrotondati coerenti con altri elementi
+ * 
+ * backdrop-filter: blur(10px):
+ * - Sfoca lo sfondo DIETRO l'elemento
+ * - Effetto vetro opaco moderno
+ * - ⚠️ Non supportato da Firefox (degrada gracefully)
+ * - Funziona con background semi-trasparente
+ */
 .instructions {
     text-align: center;
     font-size: 14px;
@@ -95,21 +370,81 @@ body {
     backdrop-filter: blur(10px);
 }
 
+/**
+ * Paragrafi dentro istruzioni:
+ * margin-bottom: 8px - spazio tra paragrafi
+ */
 .instructions p {
     margin-bottom: 8px;
 }
 
+/**
+ * Testo bold nelle istruzioni:
+ * color: #fff - bianco puro per enfasi massima
+ */
 .instructions strong {
     color: #fff;
 }
 
-/* stili degli omini */
+/**
+ * ============================================
+ * STILI STICK FIGURES - COORDINATI CON JS
+ * ============================================
+ * 
+ * Queste classi sono applicate in createStickman() in app.js
+ * JavaScript appende elementi SVG con queste classi
+ * CSS definisce l'aspetto visivo
+ */
+
+/**
+ * TESTA OMINO
+ * 
+ * fill: #2D6A4F (verde scuro):
+ * - Colore riempimento iniziale
+ * - Viene sovrascritto dinamicamente al click in JS
+ * - Può mostrare #95D5B2 (verde chiaro) o #D4A574 (terracotta)
+ * 
+ * stroke: #1B4332 (verde molto scuro):
+ * - Bordo del cerchio testa
+ * - Resta fisso, non cambia al click
+ * - Definisce contorno anche con riempimenti chiari
+ * 
+ * stroke-width: 2:
+ * - Spessore bordo 2px
+ * - Abbastanza sottile da non dominare
+ */
 .stickman-head {
     fill: #2D6A4F;
     stroke: #1B4332;
     stroke-width: 2;
 }
 
+/**
+ * CORPO, BRACCIA, GAMBE
+ * 
+ * Raggruppate con selettore multiplo (stile comune)
+ * 
+ * stroke: #1B4332:
+ * - Verde molto scuro per tutte le linee
+ * - Contrasta bene con tutti gli sfondi
+ * 
+ * stroke-width: 3:
+ * - Linee più spesse della testa (3px vs 2px)
+ * - Necessario per visibilità: linee sono più sottili di cerchi
+ * 
+ * stroke-linecap: round:
+ * - Estremità linee arrotondate (vs "butt" quadrate o "square")
+ * - EFFETTO: aspetto più organico e gradevole
+ * - Particolarmente visibile su braccia e gambe
+ * 
+ * ┌─────────────────────────────────────┐
+ * │ Confronto linecap:                  │
+ * │                                     │
+ * │ butt:   ════════════                │
+ * │ round:  ●══════════●                │
+ * │ square: ║══════════║                │
+ * └─────────────────────────────────────┘
+ */
 .stickman-body,
 .stickman-arms,
 .stickman-leg {
@@ -118,6 +453,14 @@ body {
     stroke-linecap: round;
 }
 
+/**
+ * GRUPPO OMINO - CURSORE
+ * 
+ * cursor: pointer:
+ * - Cambia cursore a "manina" (puntatore cliccabile)
+ * - Feedback visivo immediato di interattività
+ * - Anche settato in JS, ma qui come fallback/consistenza
+ */
 .stickman-group {
     cursor: pointer;
 }
