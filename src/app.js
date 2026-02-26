@@ -1,49 +1,49 @@
-// Disegna un singolo omino SVG nel gruppo g
-function createStickman(g, scale) {
+// Disegna un singolo omino SVG nel gruppo passato come parametro
+function createStickman(gruppo, scale) {
   if (!scale) scale = 1;
   var size = 25 * scale;
 
   // testa
-  g.append("circle")
+  gruppo.append("circle")
     .attr("cx", 0)
     .attr("cy", -size * 1.1)
     .attr("r", size * 0.35)
     .attr("class", "stickman-head");
 
   // occhio sinistro
-  g.append("circle")
+  gruppo.append("circle")
     .attr("cx", -size * 0.1)
     .attr("cy", -size * 1.15)
     .attr("r", size * 0.05)
     .attr("fill", "#fff");
 
   // occhio destro
-  g.append("circle")
+  gruppo.append("circle")
     .attr("cx", size * 0.1)
     .attr("cy", -size * 1.15)
     .attr("r", size * 0.05)
     .attr("fill", "#fff");
 
   // corpo
-  g.append("line")
+  gruppo.append("line")
     .attr("x1", 0).attr("y1", -size * 0.9)
     .attr("x2", 0).attr("y2", size * 0.2)
     .attr("class", "stickman-body");
 
   // braccia
-  g.append("line")
+  gruppo.append("line")
     .attr("x1", -size * 0.4).attr("y1", -size * 0.3)
     .attr("x2", size * 0.4).attr("y2", -size * 0.3)
     .attr("class", "stickman-arms");
 
   // gamba sinistra
-  g.append("line")
+  gruppo.append("line")
     .attr("x1", 0).attr("y1", size * 0.2)
     .attr("x2", -size * 0.3).attr("y2", size * 0.7)
     .attr("class", "stickman-leg");
 
   // gamba destra
-  g.append("line")
+  gruppo.append("line")
     .attr("x1", 0).attr("y1", size * 0.2)
     .attr("x2", size * 0.3).attr("y2", size * 0.7)
     .attr("class", "stickman-leg");
@@ -79,16 +79,16 @@ function createVisualization(data) {
   var yScale = d3.scaleLinear().domain([minVal, maxVal]).range([innerHeight, 0]);
 
   // setup SVG
-  var svg = d3.select("#visualization");
-  svg.selectAll("*").remove();
-  svg.attr("width", w).attr("height", h);
+  var grafico = d3.select("#visualization");
+  grafico.selectAll("*").remove();
+  grafico.attr("width", w).attr("height", h);
 
   // gruppo principale spostato di margin (margin convention D3)
-  var g = svg.append("g")
+  var areaDisegno = grafico.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   // titolo
-  svg.append("text")
+  grafico.append("text")
     .attr("x", w / 2).attr("y", 30)
     .attr("text-anchor", "middle")
     .style("font-size", "22px")
@@ -97,7 +97,7 @@ function createVisualization(data) {
     .text("Dataset Multivariato - Visualizzazione Interattiva");
 
   // istruzioni in basso
-  svg.append("text")
+  grafico.append("text")
     .attr("x", w / 2).attr("y", h - 10)
     .attr("text-anchor", "middle")
     .style("font-size", "12px")
@@ -105,7 +105,7 @@ function createVisualization(data) {
     .text("Click sugli omini per ciclare tra le coppie di variabili (1-2 -> 3-4 -> 5-6)");
 
   // data join: crea un gruppo <g> per ogni data-case, posizionato con var1-var2
-  var stickmen = g.selectAll(".stickman-group")
+  var omini = areaDisegno.selectAll(".stickman-group")
     .data(data)
     .enter()
     .append("g")
@@ -116,10 +116,10 @@ function createVisualization(data) {
     .style("cursor", "pointer");
 
   // disegna omino ed etichetta per ogni gruppo
-  stickmen.each(function(d) {
-    var group = d3.select(this);
-    createStickman(group);
-    group.append("text")
+  omini.each(function(d) {
+    var gruppoOmino = d3.select(this);
+    createStickman(gruppoOmino);
+    gruppoOmino.append("text")
       .attr("y", 25)
       .attr("text-anchor", "middle")
       .style("font-size", "10px")
@@ -128,43 +128,43 @@ function createVisualization(data) {
   });
 
   // stile iniziale omini
-  svg.selectAll(".stickman-head")
+  grafico.selectAll(".stickman-head")
     .attr("fill", "#9b59b6")
     .attr("stroke", "#6c3483")
     .attr("stroke-width", 2);
 
-  svg.selectAll(".stickman-body, .stickman-arms, .stickman-leg")
+  grafico.selectAll(".stickman-body, .stickman-arms, .stickman-leg")
     .attr("stroke", "#6c3483")
     .attr("stroke-width", 3)
     .attr("stroke-linecap", "round");
 
   // click: cicla clickState 0->1->2->0 e sposta l'omino sulla coppia di variabili corrispondente
-  stickmen.on("click", function(event, d) {
+  omini.on("click", function(event, d) {
     event.stopPropagation();
 
     d.clickState = (d.clickState + 1) % 3;
 
-    var newX, newY;
+    var nuovaX, nuovaY;
     if (d.clickState === 0) {
-      newX = xScale(d.var1); newY = yScale(d.var2);
+      nuovaX = xScale(d.var1); nuovaY = yScale(d.var2);
     } else if (d.clickState === 1) {
-      newX = xScale(d.var3); newY = yScale(d.var4);
+      nuovaX = xScale(d.var3); nuovaY = yScale(d.var4);
     } else {
-      newX = xScale(d.var5); newY = yScale(d.var6);
+      nuovaX = xScale(d.var5); nuovaY = yScale(d.var6);
     }
 
     d3.select(this)
       .transition().duration(800).ease(d3.easeCubicInOut)
-      .attr("transform", "translate(" + newX + "," + newY + ")");
+      .attr("transform", "translate(" + nuovaX + "," + nuovaY + ")");
   });
 
   // assi semitrasparenti di riferimento
-  g.append("g")
+  areaDisegno.append("g")
     .attr("transform", "translate(0," + innerHeight + ")")
     .call(d3.axisBottom(xScale).ticks(5))
     .style("opacity", 0.3);
 
-  g.append("g")
+  areaDisegno.append("g")
     .call(d3.axisLeft(yScale).ticks(5))
     .style("opacity", 0.3);
 }
