@@ -1,56 +1,20 @@
 /**
- * FUNZIONE: generateData()
+ * I dati vengono caricati da data/dataset.json tramite d3.json()
  * 
- * SCOPO: Genera un dataset sintetico di 12 casi (data-cases) con 6 variabili ciascuno
+ * STRUTTURA DI OGNI DATA-CASE nel JSON:
+ * - id: identificatore numerico univoco (0-9)
+ * - name: etichetta testuale ("Caso_1", "Caso_2", etc.)
+ * - var1-6: sei variabili quantitative positive (valori arbitrari)
  * 
- * DETTAGLI IMPLEMENTAZIONE:
- * - Ogni data-case rappresenta un'entità da visualizzare (un "omino" nel nostro caso)
- * - Le 6 variabili (var1...var6) sono raggruppate in 3 coppie:
- *   * Coppia 1: var1 (asse X), var2 (asse Y) - stato iniziale
- *   * Coppia 2: var3 (asse X), var4 (asse Y) - primo click
- *   * Coppia 3: var5 (asse X), var6 (asse Y) - secondo click
+ * PERCHÉ UN FILE JSON ESTERNO:
+ * - I dati sono separati dalla logica di visualizzazione
+ * - Il dataset può essere modificato senza toccare il codice
+ * - Rispecchia un caso d'uso reale (dati da una fonte esterna)
  * 
- * GENERAZIONE VALORI RANDOM:
- * - Math.random() genera un numero casuale tra 0 e 1 (es: 0.347, 0.891)
- * - Moltiplicare per 80 porta il range a [0, 80]
- * - Aggiungere 10 shifta il range finale a [10, 90]
- * - Questo evita valori troppo vicini ai bordi del grafico
- * 
- * STRUTTURA DATI:
- * - id: identificatore numerico univoco (0-11)
- * - name: etichetta testuale per visualizzazione ("Dato_1", "Dato_2", etc.)
- * - var1-6: le sei variabili quantitative
- * - clickState: variabile di stato per tracciare quale coppia è attualmente mostrata
- *   (0 = var1-2, 1 = var3-4, 2 = var5-6)
- * 
- * RETURN: Array di 12 oggetti JavaScript, ognuno rappresenta un data-case completo
+ * clickState viene aggiunto a runtime (non è nel JSON):
+ * - parte da 0 per ogni data-case
+ * - cambia al click: 0 → 1 → 2 → 0
  */
-function generateData() {
-  var dataset = []; // inizializzo array vuoto che conterrà tutti i dati
-  
-  // ciclo for classico per creare 12 data-cases
-  for (var i = 0; i < 12; i++) {
-    dataset.push({
-      id: i, // id numerico progressivo (0, 1, 2, ... 11)
-      name: `Dato_${i + 1}`, // template literal ES6: crea "Dato_1", "Dato_2", etc.
-      
-      // Genero 6 variabili random usando formula: Math.random() * 80 + 10
-      // Esempio calcolo: Math.random()=0.5 → 0.5*80=40 → 40+10=50 ✓
-      var1: Math.random() * 80 + 10,  // prima variabile: asse X iniziale
-      var2: Math.random() * 80 + 10,  // seconda variabile: asse Y iniziale
-      var3: Math.random() * 80 + 10,  // terza variabile: asse X al primo click
-      var4: Math.random() * 80 + 10,  // quarta variabile: asse Y al primo click
-      var5: Math.random() * 80 + 10,  // quinta variabile: asse X al secondo click
-      var6: Math.random() * 80 + 10,  // sesta variabile: asse Y al secondo click
-      
-      // Inizializzo clickState a 0 = visualizzo var1-var2
-      // Questo valore cambierà a 1 o 2 quando l'utente clicca sull'omino
-      clickState: 0
-    });
-  }
-  
-  return dataset; // ritorno l'array completo di 12 oggetti
-}
 
 /**
  * FUNZIONE: createStickman(g, scale)
@@ -213,33 +177,22 @@ function createStickman(g, scale) {
 }
 
 /**
- * FUNZIONE PRINCIPALE: createVisualization()
+ * FUNZIONE PRINCIPALE: createVisualization(data)
  * 
- * SCOPO: Orchestrare l'intera visualizzazione D3.js
- * 
- * FASI PRINCIPALI:
- * 1. Generazione dati
- * 2. Setup dimensioni e margini (margin convention)
- * 3. Calcolo scale lineari per mappare dati → pixel
- * 4. Creazione SVG e gruppi
- * 5. Data join: associare dati a elementi grafici
- * 6. Rendering stick figures
- * 7. Binding eventi interattivi (click, hover)
- * 8. Rendering assi di riferimento
- * 
- * PATTERN D3: Margin Convention
- * - Dimensioni totali SVG: w × h (900×650)
- * - Margini: creano padding interno (50px per ogni lato)
- * - Area disegno effettiva: innerWidth × innerHeight (800×550)
- * - Beneficio: spazio per assi, etichette, senza sovrapposizioni
+ * Ora riceve i dati come parametro (caricati da JSON esternamente)
+ * invece di generarli internamente.
  */
-function createVisualization() {
+function createVisualization(data) {
   /**
-   * STEP 1: GENERAZIONE DATASET
-   * Chiamo generateData() che ritorna array di 12 oggetti
-   * Ogni oggetto ha: id, name, var1-6, clickState
+   * STEP 1: AGGIUNTA clickState AI DATI
+   * 
+   * Il JSON non contiene clickState (è uno stato dell'interfaccia, non un dato).
+   * Lo aggiungo a runtime su ogni oggetto prima di usarli.
+   * data.forEach() itera ogni data-case e aggiunge clickState: 0
    */
-  var data = generateData();
+  data.forEach(function(d) {
+    d.clickState = 0; // stato iniziale: mostra var1 e var2
+  });
   
   /**
    * STEP 2: DEFINIZIONE DIMENSIONI E MARGINI
@@ -926,28 +879,24 @@ function createVisualization() {
 }
 
 /**
- * EVENT LISTENER: DOMContentLoaded
+ * AVVIO APPLICAZIONE: caricamento dati da JSON
  * 
- * SCOPO: Eseguire codice solo quando il DOM è completamente caricato
+ * d3.json() carica il file dataset.json in modo asincrono.
+ * Solo quando il file è pronto, chiama createVisualization(data).
  * 
- * PROBLEMA EVITATO:
- * - Se script esegue prima del parsing HTML completo
- * - d3.select("#visualization") non troverebbe l'elemento
- * - Causerebbe errore o visualizzazione mancante
+ * PERCHÉ ASINCRONO:
+ * - Il file JSON viene richiesto via HTTP al server
+ * - Il browser non può bloccarsi ad aspettare la risposta
+ * - .then() viene eseguito solo quando i dati sono arrivati
  * 
- * SOLUZIONE:
- * - DOMContentLoaded si attiva quando HTML parsing è completo
- * - Garantisce che <svg id="visualization"> esista
- * - Script D3 può operare sicuramente sul DOM
- * 
- * ALTERNATIVA NON USATA:
- * - Mettere <script> alla FINE del body (prima di </body>)
- * - Funzionerebbe ma DOMContentLoaded è più robusto
- * 
- * CALLBACK:
- * - function() anonima eseguita all'evento
- * - Chiama createVisualization() per iniziare rendering
+ * .catch() gestisce eventuali errori (file non trovato, JSON malformato, etc.)
  */
 document.addEventListener('DOMContentLoaded', function() {
-  createVisualization(); // avvio rendering quando DOM è pronto
+  d3.json("data/dataset.json")
+    .then(function(data) {
+      createVisualization(data); // avvio con i dati caricati dal JSON
+    })
+    .catch(function(err) {
+      console.error("Errore nel caricamento del dataset:", err);
+    });
 });
