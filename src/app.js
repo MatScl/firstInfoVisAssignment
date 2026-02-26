@@ -535,11 +535,9 @@ function createVisualization(data) {
     /**
      * DICHIARAZIONE VARIABILI DESTINAZIONE
      * newX, newY: nuove coordinate pixel dove spostare l'omino
-     * color: nuovo colore per la testa
      * Verranno assegnate nel blocco if/else successivo
      */
     var newX, newY;
-    var color;
     
     /**
      * SELEZIONE VARIABILI IN BASE ALLO STATO
@@ -547,32 +545,24 @@ function createVisualization(data) {
      * STATO 0: Coppia iniziale (var1, var2)
      * - newX = xScale(d.var1): mappa var1 su asse X
      * - newY = yScale(d.var2): mappa var2 su asse Y
-     * - color = #2D6A4F: verde scuro bosco
      */
     if (d.clickState === 0) {
       newX = xScale(d.var1);  // coordinate X basata su prima variabile
       newY = yScale(d.var2);  // coordinate Y basata su seconda variabile
-      color = "#2D6A4F";      // verde scuro (palette terracotta-verde)
       
     /**
      * STATO 1: Seconda coppia (var3, var4)
-     * - color = #95D5B2: verde chiaro menta
-     * - Diverso da stato 0 per feedback visivo chiaro
      */
     } else if (d.clickState === 1) {
       newX = xScale(d.var3);  // terza variabile → X
       newY = yScale(d.var4);  // quarta variabile → Y
-      color = "#95D5B2";      // verde chiaro
       
     /**
      * STATO 2: Terza coppia (var5, var6)
-     * - color = #D4A574: terracotta/beige caldo
-     * - Contrasto massimo con i verdi
      */
     } else {
       newX = xScale(d.var5);  // quinta variabile → X
       newY = yScale(d.var6);  // sesta variabile → Y
-      color = "#D4A574";      // terracotta
     }
     
     /**
@@ -615,199 +605,10 @@ function createVisualization(data) {
       .duration(800)                             // durata 0.8 secondi
       .ease(d3.easeCubicInOut)                  // easing cubico fluido
       .attr("transform", `translate(${newX},${newY})`); // nuova posizione
-    
-    /**
-     * ANIMAZIONE COLORE TESTA
-     * 
-     * Selezione specifica: .select(".stickman-head")
-     * - Trova il cerchio della testa DENTRO questo gruppo
-     * - Non tocca corpo/braccia/gambe
-     * 
-     * Durata 400ms (metà del movimento):
-     * - Cambio colore più rapido del movimento
-     * - Feedback visivo immediato
-     * 
-     * Interpolazione colore:
-     * - D3 converte colori esadecimali in RGB
-     * - Interpola canali R, G, B separatamente
-     * - Esempio: #9b59b6 → #2D6A4F
-     *   RGB(155,89,182) → RGB(45,106,79)
-     *   R: 155→45, G: 89→106, B: 182→79
-     */
-    d3.select(this).select(".stickman-head")
-      .transition()
-      .duration(400)       // più veloce del movimento
-      .attr("fill", color); // nuovo colore basato su clickState
   });
 
   /**
-   * STEP 13: EVENTO MOUSEENTER - HOVER ZOOM-IN
-   * 
-   * TRIGGER: Mouse entra nell'area del gruppo omino
-   * 
-   * OBIETTIVO:
-   * - Ingrandire l'omino a 120% (scale 1.2)
-   * - Ingrandire la testa leggermente
-   * - Fornire feedback visivo per interattività
-   * 
-   * SFIDA: Preservare la posizione translate durante scale
-   * 
-   * PROBLEMA:
-   * - Ogni gruppo ha transform="translate(x,y)"
-   * - Voglio aggiungere scale(1.2) SENZA perdere la posizione
-   * - Non posso semplicemente sovrascrivere con "scale(1.2)"
-   * 
-   * SOLUZIONE: REGEX PARSING
-   * - Estraggo coordinate attuali dalla stringa transform
-   * - Ricostruisco transform con entrambi translate E scale
-   */
-  stickmen
-    .on("mouseenter", function() {
-      /**
-       * PARSING TRANSFORM CORRENTE
-       * 
-       * d3.select(this).attr("transform"):
-       * - Ottiene il valore corrente di transform
-       * - Es: "translate(350.5, 120.8)"
-       * 
-       * REGEX: /translate\(([-\d.]+),([-\d.]+)\)/
-       * Breakdown del pattern:
-       * - translate\( : letterale "translate(" (parentesi escaped)
-       * - ([-\d.]+)   : gruppo cattura 1 - numero con segno/decimali
-       *   [-\d.]      : classe caratteri: -, cifre, punto decimale
-       *   +           : uno o più caratteri
-       * - ,           : letterale virgola
-       * - ([-\d.]+)   : gruppo cattura 2 - secondo numero
-       * - \)          : letterale ")" chiusura
-       * 
-       * .match() ritorna array:
-       * - match[0]: intera stringa matchata "translate(350.5, 120.8)"
-       * - match[1]: primo gruppo catturato "350.5"
-       * - match[2]: secondo gruppo catturato "120.8"
-       */
-      d3.select(this)
-        .transition()
-        .duration(200)  // animazione rapida (0.2 sec) per risposta immediata
-        .attr("transform", function(d) {
-          // Leggo transform corrente
-          var currentTransform = d3.select(this).attr("transform");
-          
-          // Tento il match con regex
-          var match = currentTransform.match(/translate\(([-\d.]+),([-\d.]+)\)/);
-          
-          /**
-           * CONTROLLO VALIDITÀ MATCH
-           * Se match è null (nessuna corrispondenza), ritorno transform invariato
-           * Se match esiste, ho le coordinate in match[1] e match[2]
-           */
-          if (match) {
-            /**
-             * RICOSTRUZIONE TRANSFORM COMBINATO
-             * 
-             * Template literal: `translate(${match[1]},${match[2]}) scale(1.2)`
-             * Risultato esempio: "translate(350.5,120.8) scale(1.2)"
-             * 
-             * ORDINE IMPORTANTE:
-             * - translate PRIMA, scale DOPO
-             * - SVG applica trasformazioni da sinistra a destra
-             * - Prima sposta, POI scala
-             * - Se invertissi, scalerebbe le coordinate translate!
-             * 
-             * EFFETTO scale(1.2):
-             * - Ingrandisce tutto del 20%
-             * - Corpo, testa, braccia, gambe: tutti 1.2x
-             * - Mantiene proporzioni
-             * - Centro di scala: origine del gruppo (0,0)
-             */
-            return `translate(${match[1]},${match[2]}) scale(1.2)`;
-          }
-          
-          // Fallback: se regex fallisce, non cambio nulla
-          return currentTransform;
-        });
-      
-      /**
-       * INGRANDIMENTO TESTA AGGIUNTIVO
-       * 
-       * PERCHÉ SEPARATO:
-       * - scale(1.2) ingrandisce tutto uniformemente
-       * - Voglio enfatizzare ANCORA di più la testa
-       * - Feedback visivo più marcato
-       * 
-       * CALCOLO RAGGIO:
-       * - Raggio base testa: size * 0.35 = 25 * 0.35 = 8.75px
-       * - Raggio ingrandito: 9.5px
-       * - Incremento: 9.5 / 8.75 ≈ 1.086 = +8.6%
-       * 
-       * COMBINATO CON SCALE:
-       * - scale(1.2): testa diventa 8.75 * 1.2 = 10.5px
-       * - Poi r=9.5 SOVRASCRIVE: testa effettivamente 9.5px
-       * - Risultato: corpo scala a 1.2x, testa resta quasi originale
-       *   (crea effetto comico / cartoon)
-       * 
-       * ANIMAZIONE:
-       * - Stessa durata 200ms per sincronia con scale
-       */
-      d3.select(this).select(".stickman-head")
-        .transition()
-        .duration(200)
-        .attr("r", 9.5); // da 8.75 a 9.5 (+8.6%)
-    })
-    
-    /**
-     * STEP 14: EVENTO MOUSELEAVE - HOVER ZOOM-OUT
-     * 
-     * TRIGGER: Mouse esce dall'area del gruppo omino
-     * 
-     * OBIETTIVO:
-     * - Riportare omino a dimensione normale (scale 1)
-     * - Ripristinare raggio originale testa
-     * - Reversibilità completa dell'hover
-     * 
-     * LOGICA IDENTICA A MOUSEENTER:
-     * - Stessa regex per parsing
-     * - Stessa ricostruzione transform
-     * - DIFFERENZA: scale(1) invece di scale(1.2)
-     */
-    .on("mouseleave", function() {
-      /**
-       * RIPRISTINO SCALA NORMALE
-       * 
-       * Parsing identico a mouseenter
-       * Cambio solo il valore finale di scale: 1.2 → 1
-       * scale(1) = nessuna scala = dimensioni originali
-       */
-      d3.select(this)
-        .transition()
-        .duration(200)  // stessa durata per simmetria
-        .attr("transform", function(d) {
-          var currentTransform = d3.select(this).attr("transform");
-          var match = currentTransform.match(/translate\(([-\d.]+),([-\d.]+)\)/);
-          
-          if (match) {
-            // NOTA: scale(1) è tecnicamente opzionale (equivale a nessuna scala)
-            // Lo includo per chiarezza e per garantire override di scale(1.2)
-            return `translate(${match[1]},${match[2]}) scale(1)`;
-          }
-          return currentTransform;
-        });
-      
-      /**
-       * RIPRISTINO RAGGIO TESTA ORIGINALE
-       * 
-       * r = 8.75: valore calcolato in createStickman()
-       * size * 0.35 = 25 * 0.35 = 8.75px
-       * 
-       * Ritorna esattamente allo stato pre-hover
-       */
-      d3.select(this).select(".stickman-head")
-        .transition()
-        .duration(200)
-        .attr("r", 8.75); // ripristino dimensione originale
-    });
-
-  /**
-   * STEP 15: ASSI DI RIFERIMENTO
+   * STEP 13: ASSI DI RIFERIMENTO
    * 
    * SCOPO:
    * - Fornire riferimenti numerici per le coordinate
